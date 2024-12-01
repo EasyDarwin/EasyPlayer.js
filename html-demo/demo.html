@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>演示</title>
+  <script src="./js/EasyPlayer-pro.js"></script>
+</head>
+<style>
+  .player_item {
+    position: relative;
+    padding-bottom: 56%;
+    background-color: black;
+    margin-bottom: 20px;
+  }
+
+  .player_box {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+  }
+  .inputs {
+    -webkit-appearance: none;
+    background-color: #fff;
+    background-image: none;
+    border-radius: 4px;
+    border: 1px solid #dcdfe6;
+    box-sizing: border-box;
+    color: #606266;
+    display: inline-block;
+    font-size: inherit;
+    height: 36px;
+    line-height: 36px;
+    outline: none;
+    padding: 0 15px;
+    transition: border-color .2s cubic-bezier(.645, .045, .355, 1);
+    width: 100%;
+    max-width: 600px;
+    margin-right: 16px;
+    margin-bottom: 16px;
+    margin-top: 16px;
+  }
+  .btn-item {
+    cursor: pointer;
+    display: inline-block;
+    padding: 6px 12px;
+    margin-right: 15px;
+    border-radius: 4px;
+    border: 1px #ccc solid;
+  }
+  .df {
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+  .box {
+    padding-top: 10px;
+    margin: auto;
+    max-width: 800px;
+  }
+</style>
+
+<body>
+  <div class="box">
+    <br>
+    <h2>EasyPlayerPro案例演示</h2>
+    <br>
+    <div class="player_item">
+      <div class="player_box" id="player_box"></div>
+    </div>
+    <div>
+      <input id="hasAudio" type="checkbox" /><span >音频</span>
+    </div>
+    <input class="inputs" type="text" id="input" value="ws://localhost:6230/ws_flv/live/stream_1_0.flv">
+    <div>
+      <div class="btn-item" id="onPlayer" >播放</div>
+      <div class="btn-item" id="onReplay" >重播</div>
+      <div class="btn-item" id="onMute">静音</div>
+      <div class="btn-item" id="onStop" >注销</div>
+    </div>
+  </div>
+  <script>
+    window.onload = function () {
+      var playerInfo = null
+      var config = {
+        stretch: true,
+        hasAudio: true,
+      }
+      playCreate()
+      var input = document.getElementById('input');
+      var audio = document.getElementById('hasAudio');
+      var player = document.getElementById('onPlayer');
+      var replay = document.getElementById('onReplay');
+      var mute = document.getElementById('onMute');
+      var stop = document.getElementById('onStop');
+      if (config.hasAudio)audio.checked =true
+      audio.onclick = () => {
+        if (audio.checked ==true) {
+          config.hasAudio = true
+        } else {
+          config.hasAudio = false
+        }
+      }
+      player.onclick = () => {
+        onPlayer()
+      }
+      replay.onclick = () => {
+        onReplay()
+      }
+      mute.onclick = () => {
+        onMute()
+      }
+      stop.onclick = () => {
+        onStop()
+      }
+
+      function playCreate() {
+        var container = document.getElementById('player_box');
+        playerInfo = new EasyPlayerPro(container, config);
+      }
+      function onPlayer() {
+        playerInfo && playerInfo.play(input.value).then(() => {
+        }).catch((e) => {
+          console.error(e);
+        });
+      }
+      function onMute() {
+        if (!playerInfo)return
+        playerInfo.setMute(true)
+      }
+      function onReplay() {
+        onDestroy().then(() => {
+          playCreate();
+          onPlayer()
+        });
+      }
+      function onDestroy() {
+        return new Promise((resolve, reject) => {
+            if (playerInfo) {
+              playerInfo.destroy()
+              playerInfo = null
+            }
+            setTimeout(() => {
+              resolve();
+            }, 100);
+        })
+      }
+      function onStop() {
+        onDestroy().then(() => {
+          playCreate();
+        });
+      }
+    }
+
+  </script>
+</body>
+
+</html>
