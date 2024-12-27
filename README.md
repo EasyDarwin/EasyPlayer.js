@@ -55,10 +55,12 @@ container 获取dom 节点
 | canvasRender |渲染容器                                   | Boolean                    | false   |
 | isRtcSRS |SRS类型                                   | Boolean                    | false   |
 | isRtcZLM |ZLM类型                                   | Boolean                    | false   |
+| isFlow | 裸流 | Boolean | false |
 | watermark         | 水印      | Object |  {text: {content:'test',color:'',opacity:,fontSize:''},right: 0,top: 0}   |
 | fullWatermark         | 全屏水印      | Object | {text: 'test',angle:'',color:'',fontSize: '',opacity:''}   |
 | quality         | 配置清晰      | Array | ['普清', '高清', '超清', '4K', '8K']   |
 | defaultQuality  |  默认显示的清晰度，如果不设置，会显示第一个清晰度                                    | String | -   |
+| ptzConfig         | PTZ配置      | Object | {ptz: true, ptzMore: true}   |
 | debug | 控制台日志打印 | Boolean | false |
 注: 
 
@@ -75,6 +77,8 @@ container 获取dom 节点
 | fullscreen      | 全屏      |
 | mute      | 音频      |
 | kBps      | 当前网速， 单位KB 每秒1次,      |
+| stretch      | 切换拉伸    |
+| ptz      | PTZ事件    |
 | screenshots      | 截图回调    |
 | contextmenuClose      | 右击关闭回调    |
 | decodeHevc      | 视频编码回调    |
@@ -113,6 +117,7 @@ EasyPlayrPro.on('play', function () {
 | seekTime      |  设置录像跳转时间/s     |               |
 | getVideoInfo      |  获取视频信息    |               |
 | getAudioInfo      |  获取音频信息    |               |
+| setMic      | 设置语音对讲状态(PTZ需开启)    |   true|
 | destroy      | 关闭视频，释放底层资源    |               |
 
 screenshot 截图，调用后弹出下载框保存截图
