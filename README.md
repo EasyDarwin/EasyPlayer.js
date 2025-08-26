@@ -135,6 +135,9 @@ const base64 = EasyPlayerPro.screenshot("test", "png", 0.5, 'base64')
 
 ## 更多流媒体音视频资源
 
-技术专线：188-5511-6262（同微信）
+
+<img width="185" height="184" alt="QQ_1756176182992" src="https://github.com/user-attachments/assets/1fb42348-2bf8-4ee5-9cb0-610385067c99" />
+
+技术资料：关注‘EasyPlayer’公众号
 
 EasyDarwin开源流媒体服务器：<a href="http://www.easydarwin.org" target="_blank" title="EasyDarwin开源流媒体服务器">www.EasyDarwin.org</a>
