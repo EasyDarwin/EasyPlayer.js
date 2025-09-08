@@ -105,6 +105,7 @@ EasyPlayrPro.on('play', function () {
 | 方法名      | 说明         | 参数                  |
 | ---------- | ------------ | ---------------------|
 | play         | 播放      |         'url'            |
+| playback     | 点播播放      |         'url'            |
 | pause      | 暂停播放    |               |
 | isPause      | 返回是否暂停中状态    |               |
 | setMute      | 音频    |      true|false         |
