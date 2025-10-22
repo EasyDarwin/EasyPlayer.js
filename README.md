@@ -26,7 +26,7 @@ EasyPlayer.js H5播放器，是一款能够同时支持HTTP、HTTP-FLV、HLS（m
 - [x] 支持 解析视频i帧文件转base64;
 
 ## 案例演示
-演示地址: https://www.easydarwin.org/easyplayer.js/index.html
+演示地址: [https://www.easydarwin.org/easyplayer.js/index.html](https://www.tsingsee.com/easyplayer/)
 ## 播放器实例
 new EasyPlayerPro(container, config)
 ## 配置容器 container
