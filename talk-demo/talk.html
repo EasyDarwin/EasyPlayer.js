@@ -1,0 +1,227 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EasyGBS对讲案例</title>
+  <script src="./js/EasyPlayer-Pro-talk.js"></script>
+  <script src="./js/2.6.14_vue.min.js"></script>
+  <script src="./js/axios.min.js"></script>
+</head>
+<style>
+  /* color: #07baf4; */
+  * {
+    margin: 0;
+    padding: 0;
+  }
+
+  p {
+    line-height: 24px;
+  }
+
+  #app {
+    padding-top: 10px;
+    margin: auto;
+    max-width: 800px;
+  }
+
+  .inputs {
+    -webkit-appearance: none;
+    background-color: #fff;
+    background-image: none;
+    border-radius: 4px;
+    border: 1px solid #dcdfe6;
+    box-sizing: border-box;
+    color: #606266;
+    display: inline-block;
+    font-size: inherit;
+    height: 36px;
+    line-height: 36px;
+    outline: none;
+    padding: 0 15px;
+    transition: border-color .2s cubic-bezier(.645, .045, .355, 1);
+    width: 100%;
+    max-width: 600px;
+    margin-right: 16px;
+  }
+
+  .radio-item {
+    cursor: pointer;
+    display: inline-block;
+    padding: 6px 12px;
+    margin-right: 15px;
+    border-radius: 4px;
+    border: 1px #ccc solid;
+  }
+
+  .radio-active {
+    color: #fff;
+    background-color: #07baf4;
+    border-color: #07baf4;
+  }
+
+  .df {
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+
+  .df span {
+    margin-left: 4px;
+  }
+
+  .df form {
+    margin-right: 4px;
+  }
+</style>
+
+<body>
+  <div id="app">
+    <br>
+    <h2>EasyGBS对讲案例演示 </h2>
+    <div>
+      <a href="https://s.apifox.cn/d1358d43-e634-41fa-a878-6a27d9289a1e?pwd=1123" target="_blank">接口文档</a>
+    </div>
+    <br>
+    <div class="df">
+      <div>对讲地址：</div><input class="inputs" v-model="apiTalkUrl">
+    </div>
+    <div class="df">
+      <div>Token鉴权：</div><input class="inputs" v-model="authorization">
+    </div>
+    <div class="df">
+      <div class="radio-item" @click="getTalk()">开始对讲</div>
+      <div class="radio-item" @click="stopTalk()">停止对讲</div>
+    </div>
+    <div v-for="(item, index) in msgLogs" :key="index">{{item}}</div>
+  </div>
+
+  <script>
+    new Vue({
+      el: "#app",
+      data() {
+        return {
+          apiTalkUrl: "http://127.0.0.1:10000/channels/34020000001320000178_34020000001320000001/talk",
+          authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVSUQiOjIyMiwiVXNlcm5hbWUiOiJhZG1pbjEyMyIsIkdyb3VwSUQiOjExMSwiR3JvdXBMZXZlbCI6MCwiUm9sZSI6ImFkbWluIiwiTGV2ZWwiOjEsImlzcyI6Inh4QGdvbGFuZy5zcGFjZSIsImV4cCI6MTc2MjU4Nzg0NiwiaWF0IjoxNzYyMTU1ODQ2fQ.Guy_Cwr2wq14g6m71OcSs3D5SYeoq_xsfwQLDq4sRhI",
+          wsUrl: "",
+          talkType: "udp",
+          wsInfo: null,
+          talkInfo: null,
+          isPlay: false,
+
+          msgLogs: [],
+        }
+      },
+      mounted() {
+        // this.getTalk()
+      },
+      methods: {
+        getTalk() {
+
+          axios.post(this.apiTalkUrl, null, {
+            headers: {
+              'Authorization': this.authorization, // 携带 Token
+            }
+          })
+            .then(response => {
+              if (response.data.talk_url && response.data.talk_url != '') {
+                this.wsUrl = response.data.talk_url
+                this.talkType = response.data.transport
+              } else {
+                this.onLog('ws对讲地址获取失败!')
+              }
+              this.playCreate()
+            })
+            .catch(error => {
+              this.onLog('对讲请求失败')
+              console.error('请求失败:', error)
+            });
+        },
+
+
+        onLog(s) {
+          let str = `${new Date().toLocaleTimeString()}: ${s}`
+          this.msgLogs.push(str)
+        },
+        playCreate() {
+          this.talkInfo = new window.EasyPlayerProTalk({
+            saveRtpToFile: false,
+          });
+
+
+          this.startTalk()
+        },
+        startTalk() {
+          this.onLog('start talk');
+          if (this.talkInfo && this.wsUrl) {
+            this.talkInfo
+              .startTalk(this.wsUrl, {
+                encType: 'g711a',
+                packetType: 'rtp',
+                sampleBitsWidth: 16,
+                sampleRate: 8000,
+                packetTcpSendType: this.talkType,
+                engine: 'worklet',
+                debug: false,
+                saveRtpToFile: false,
+              })
+              .catch((err) => {
+                if (
+                  !window.location.origin.startsWith('https') &&
+                  !window.location.hostname.includes('localhost')
+                ) {
+                  return this.onLog(`浏览器需要HTTPS才能采集音频!`);
+                }
+                this.onLog('连接语音失败!');
+              });
+              this.talkInfo.on('talkStreamMessage', (event) => {
+                let data;
+                try {
+                  data = JSON.parse(event.data);
+                } catch (e) {
+                  data = event.data;
+                }
+                if (data.type == 'DISCONNECT' || data.type == 'ERROR') {
+                  this.onLog(data.msg);
+                  return;
+                }
+                this.onLog(JSON.stringify(data));
+              });
+
+              this.talkInfo.on('talkStreamError', (event) => {
+                this.onLog('连接语音失败!');
+              });
+          } else {
+            if (!this.talkInfo) {
+              this.onLog('创建语音失败，请重试!');
+            }
+            if (!this.wsUrl) {
+              this.onLog('连接语音失败!');
+            }
+          }
+        },
+
+        stopTalk() {
+          if (this.talkInfo) {
+            this.talkInfo
+              .stopTalk()
+              .then(() => {
+                this.talkInfo.destroy();
+                this.onLog('stop talk ok');
+              })
+              .catch((e) => {
+                this.onLog('stop talk error', e);
+              });
+          } else {
+            this.onLog(' is not ready');
+          }
+        },
+
+      }
+    })
+  </script>
+
+</body>
+
+</html>
