@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>多分屏演示</title>
-  <script src="./js/EasyPlayer-pro.js"></script>
+  <script src="../js/EasyPlayer-pro.js"></script>
   <script src="./2.6.14_vue.min.js"></script>
 </head>
 <style>
@@ -111,7 +111,7 @@
     <h2>EasyPlayerPro案例演示</h2>
     <br>
     <div :class="['player_container','player_container_1']">
-      <div class="player_item" >
+      <div class="player_item">
         <div class="player_box" id="player_box1">
 
         </div>
@@ -202,14 +202,14 @@
             this.playCreate();
             this.config.isLive = false
             setTimeout((url) => {
-                this.playerInfo && this.playerInfo.play(url).then(() => {
+              this.playerInfo && this.playerInfo.play(url).then(() => {
 
-                }).catch((e) => {
-                  console.error(e);
-                });
+              }).catch((e) => {
+                console.error(e);
+              });
             }, 0, this.videoUrl)
           });
-         
+
         },
         onStop() {
           this.isPlay = false
@@ -237,14 +237,27 @@
         },
         playCreate() {
           var container = document.getElementById('player_box1');
-          var easyplayer = new EasyPlayerPro(container,{
-            isLive:this.config.isLive,//默认 true 
+          var easyplayer = new EasyPlayerPro(container, {
+            isLive: this.config.isLive,//默认 true 
             bufferTime: 0.2, // 缓存时长
             stretch: false,
             MSE: this.config.MSE,
             WCS: this.config.WCS,
+            isFlv: true,
             hasAudio: this.config.hasAudio,
-            watermark: {text: {content: 'easyplayer-pro'},right: 10,top: 10},
+            watermark: { text: { content: 'easyplayer-pro' }, right: 10, top: 10 },
+            isBand: true,
+            btns: {
+              play: true,
+              audio: true,
+              record: true,
+              zoom: true,
+              ptz: true,
+              quality: true,
+              stretch: false,
+              screenshot: true,
+              fullscreen: true,
+            }
           });
 
           easyplayer.on("fullscreen", function (flag) {

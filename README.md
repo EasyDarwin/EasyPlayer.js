@@ -1,5 +1,3 @@
-# 文档
-
 ## 简介
 
 EasyPlayer.js H5播放器，是一款能够同时支持HTTP、HTTP-FLV、HLS（m3u8）、WS、WEBRTC、FMP4视频直播与视频点播等多种协议，支持H.264、H.265、AAC、G711A、Mp3等多种音视频编码格式，支持MSE、WASM、WebCodec等多种解码方式，支持Windows、Linux、Android、iOS全平台终端的H5播放器，使用简单, 功能强大。
@@ -26,7 +24,7 @@ EasyPlayer.js H5播放器，是一款能够同时支持HTTP、HTTP-FLV、HLS（m
 - [x] 支持 解析视频i帧文件转base64;
 
 ## 案例演示
-演示地址: [https://www.easydarwin.org/easyplayer.js/index.html](https://www.tsingsee.com/easyplayer/)
+演示地址: https://old.tsingsee.com/easyplayer/
 ## 播放器实例
 new EasyPlayerPro(container, config)
 ## 配置容器 container
@@ -51,6 +49,7 @@ container 获取dom 节点
 | WASM | WASM模式 | Boolean | fasle |
 | WASMSIMD |WASMSIMD模式                                     | Boolean                    | false   |
 | gpuDecoder |硬解码                                    | Boolean                    | false   |
+| isFlv |强制使用Flv解码 | Boolean | false |
 | webGPU |渲染方式                                       | Boolean                    | false   |
 | canvasRender |渲染容器                                   | Boolean                    | false   |
 | isRtcSRS |SRS类型                                   | Boolean                    | false   |
@@ -62,10 +61,27 @@ container 获取dom 节点
 | defaultQuality  |  默认显示的清晰度，如果不设置，会显示第一个清晰度                                    | String | -   |
 | ptzConfig         | PTZ配置      | Object | {ptz: true, ptzMore: true}   |
 | debug | 控制台日志打印 | Boolean | false |
-注: 
+| isBand | 是否显示网络状态 | Boolean | true |
+|btns |按钮列表|Object|按钮属性说明|
 
-    1.解码模式 MSE > WCS > wasm(simd适合高分辨率)
- 
+注: 解码模式 MSE > WCS > wasm(simd适合高分辨率)
+
+## 按钮属性
+
+| 属性       | 说明           | 类型    | 默认值 |
+| ---------- | -------------- | ------- | ------ |
+| fullscreen | 全屏按钮       | Boolean | true   |
+| screenshot | 截图按钮       | Boolean | true   |
+| play       | 播放按钮       | Boolean | true   |
+| audio      | 音量按钮       | Boolean | true   |
+| record     | 录屏按钮       | Boolean | true   |
+| stretch    | 是否拉伸按钮   | Boolean | true   |
+| zoom       | 电子放大按钮   | Boolean | false  |
+| ptz        | PTZ控制按钮    | Boolean | false  |
+| quality    | 清晰度控制按钮 | Boolean | false  |
+
+
+
 ## 事件回调
 
 | 事件名      | 说明         |
@@ -78,7 +94,7 @@ container 获取dom 节点
 | mute      | 音频      |
 | kBps      | 当前网速， 单位KB 每秒1次,      |
 | stretch      | 切换拉伸    |
-| ptz      | PTZ事件    |
+| ptz | PTZ 事件 |
 | screenshots      | 截图回调    |
 | contextmenuClose      | 右击关闭回调    |
 | decodeHevc      | 视频编码回调    |
